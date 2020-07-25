@@ -94,33 +94,105 @@ asthmaLungFunctionData %>% group_by(Group) %>% summarise(mean = mean(Age, na.rm=
 shapiro.test(asthmaLungFunctionData$Age)
 qqnorm(asthmaLungFunctionData$Age)
 qqline(asthmaLungFunctionData$Age, col = "red")
-outlierAges <- boxplot(asthmaLungFunctionData$Age, plot=FALSE)$out
-
+outlierAges <- boxplot(asthmaLungFunctionData$Age, plot=FALSE)
 
 
 
 
 
 ########  GENDER ANALYSIS #############
+########  GENDER ANALYSIS #############
+########  GENDER ANALYSIS #############
+########  GENDER ANALYSIS #############
+########  GENDER ANALYSIS #############
+########  GENDER ANALYSIS #############
+########  GENDER ANALYSIS #############
+
+freq(asthmaLungFunctionData$GenderMaleFemale)
+summary(asthmaLungFunctionData$GenderMaleFemale)
+
+by(asthmaLungFunctionData$GenderMaleFemale, asthmaLungFunctionData$Group, summary)
+
+by(asthmaLungFunctionData$GenderMaleFemale, asthmaLungFunctionData$Group, freq)
+
+xx <- table(asthmaLungFunctionData$GenderMaleFemale, asthmaLungFunctionData$Group)
+
+xx
+
+chiTreatmentGroup <- chisq.test(xx)
+chiTreatmentGroup
 
 
-by(asthmaLungFunctionData$Sex, asthmaLungFunctionData$Group, summary)
-xx <- table(asthmaLungFunctionData$Sex, asthmaLungFunctionData$Group)
-#colnames(xx)
+phi(chiTreatmentGroup)
 
-xx[, 2:5]
+cramersV(chiTreatmentGroup)
 
-chiCellType <- chisq.test(xx[, 2:5])
-
-#
-phi(xx[, 2:5])
-
-cramersV(xx[,2:5])
-
-
-
-test <- fisher.test(xx)
+test <- fisher.test(chiTreatmentGroup)
 test
+
+
+################# WEEK ZERO #################
+################# WEEK ZERO #################
+################# WEEK ZERO #################
+################# WEEK ZERO #################
+################# WEEK ZERO #################
+
+
+
+#summarytools::freq(asthmaLungFunctionData$Week.0)
+base::summary(asthmaLungFunctionData$Week.0)
+getmode(asthmaLungFunctionData$Week.0)
+e1071::skewness(asthmaLungFunctionData$Week.0)
+histo <- graphics::hist(asthmaLungFunctionData$Week.0)
+table(cut(asthmaLungFunctionData$Week.0, breaks=seq(0, 100, 10)))
+
+histo$density = histo$counts/sum(histo$counts)*100
+
+
+min(asthmaLungFunctionData$Week.0)
+max(asthmaLungFunctionData$Week.0)
+range(asthmaLungFunctionData$Week.0)
+mean(asthmaLungFunctionData$Week.0)
+mean(asthmaLungFunctionData$Week.0, na.rm = TRUE)
+median(asthmaLungFunctionData$Week.0)
+sd(asthmaLungFunctionData$Week.0)
+
+####### WEEK ZERO BY TREATMENT GROUP #######
+
+asthmaLungFunctionData %>% group_by(Group) %>% 
+  summarise(mean = mean(Week.0), 
+            sd = sd(Week.0), 
+            mode=getmode(Week.0), 
+            min=min(Week.0), 
+            max=max(Week.0), 
+            median=median(Week.0),
+            n = n())
+
+outlierAges <- boxplot(asthmaLungFunctionData$Week.0, plot=FALSE)$out
+
+##################### t-test for WEEK ZERO BY TREATMENT GROUP ###################
+##################### t-test for WEEK ZERO BY TREATMENT GROUP ###################
+##################### t-test for WEEK ZERO BY TREATMENT GROUP ###################
+
+res.ftest <- var.test(Week.0 ~ Group, data = asthmaLungFunctionData)
+res.ftest$p.value
+
+bartlett.test(Week.0 ~ Group, data=asthmaLungFunctionData)
+lvtest <- leveneTest(Week.0 ~ Group, data=asthmaLungFunctionData)
+fligner.test(Week.0 ~ Group, data = asthmaLungFunctionData)
+plot(Week.0 ~ Group, data = asthmaLungFunctionData)
+t.test (Week.0 ~ Group , var.equal=FALSE, data = asthmaLungFunctionData)
+asthmaLungFunctionData %>% group_by(Group) %>% summarise(mean = mean(Week.0, na.rm=TRUE), sd = sd(Week.0, na.rm=TRUE), 
+                                                         median = median(Week.0, na.rm=TRUE) , min=min(Week.0, na.rm=TRUE),
+                                                         max=max(Week.0, na.rm=TRUE),n = n(), non_na_count = sum(!is.na(Week.0)))
+
+shapiro.test(asthmaLungFunctionData$Week.0)
+qqnorm(asthmaLungFunctionData$Week.0)
+qqline(asthmaLungFunctionData$Week.0, col = "red")
+outlierAges <- boxplot(asthmaLungFunctionData$Week.0, plot=FALSE)
+
+
+
 
 
 
