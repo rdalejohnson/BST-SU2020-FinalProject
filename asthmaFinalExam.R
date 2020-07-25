@@ -23,6 +23,14 @@ describe(asthmaLungFunctionData)
 str(asthmaLungFunctionData)
 
 
+#### Adding columns to the dataset for later analysis #####
+asthmaLungFunctionData$GenderMaleFemale <- 
+    with(asthmaLungFunctionData, ifelse(is.na(Sex), NA,  ifelse(Sex==0, "Female", "Male")))
+
+
+
+
+
 ############################## DESCRIPTIVE STATISTICS ####################################
 ############################## DESCRIPTIVE STATISTICS ####################################
 ############################## DESCRIPTIVE STATISTICS ####################################
@@ -90,22 +98,29 @@ outlierAges <- boxplot(asthmaLungFunctionData$Age, plot=FALSE)$out
 
 
 
-x<-asthmaLungFunctionData
-x<- x[-which(asthmaLungFunctionData$Age %in% outlierAges),]
-res.ftest <- var.test(Age ~ Group, data = x)
-res.ftest$p.value
-bartlett.test(Age ~ Group, data=x)
-leveneTest(Age ~ Group, data=x)
-fligner.test(Age ~ Group, data = x)
-plot(Age ~ Group, data = x)
-t.test (Age ~ Group , var.equal=TRUE, data = x)
-x %>% group_by(Group) %>% summarise(mean = mean(Age, na.rm=TRUE), sd = sd(Age, na.rm=TRUE), 
-                                        median = median(Age, na.rm=TRUE) , min=min(Age, na.rm=TRUE),
-                                        max=max(Age, na.rm=TRUE),n = n(), non_na_count = sum(!is.na(Age)))
 
 
 
+########  GENDER ANALYSIS #############
 
+
+by(asthmaLungFunctionData$Sex, asthmaLungFunctionData$Group, summary)
+xx <- table(asthmaLungFunctionData$Sex, asthmaLungFunctionData$Group)
+#colnames(xx)
+
+xx[, 2:5]
+
+chiCellType <- chisq.test(xx[, 2:5])
+
+#
+phi(xx[, 2:5])
+
+cramersV(xx[,2:5])
+
+
+
+test <- fisher.test(xx)
+test
 
 
 
