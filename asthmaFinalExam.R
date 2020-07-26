@@ -28,6 +28,12 @@ asthmaLungFunctionData$GenderMaleFemale <-
     with(asthmaLungFunctionData, ifelse(is.na(Sex), NA,  ifelse(Sex==0, "Female", "Male")))
 
 
+asthmaLungFunctionData$LungFunctionStatus <- 
+  with(asthmaLungFunctionData, ifelse(is.na(Status), NA,  ifelse(Status==0, "Active", "Remission")))
+
+asthmaLungFunctionData$TreatmentGroupDrugName <- 
+  with(asthmaLungFunctionData, ifelse(is.na(Group), NA,  ifelse(Group==0, "Drug A/0", "Drug B/1")))
+
 
 
 
@@ -97,7 +103,11 @@ qqline(asthmaLungFunctionData$Age, col = "red")
 outlierAges <- boxplot(asthmaLungFunctionData$Age, plot=FALSE)
 
 
+######## TREATMENT GROUP BREAKDOWN/COUNT #########
 
+
+freq(asthmaLungFunctionData$TreatmentGroupDrugName)
+summary(asthmaLungFunctionData$TreatmentGroupDrugName)
 
 
 ########  GENDER ANALYSIS #############
@@ -129,6 +139,40 @@ cramersV(chiTreatmentGroup)
 
 test <- fisher.test(chiTreatmentGroup)
 test
+
+
+
+
+########  LUNG FUNCTION ANALYSIS #############
+########  LUNG FUNCTION ANALYSIS #############
+########  LUNG FUNCTION ANALYSIS #############
+########  LUNG FUNCTION ANALYSIS #############
+########  LUNG FUNCTION ANALYSIS #############
+########  LUNG FUNCTION ANALYSIS #############
+
+
+freq(asthmaLungFunctionData$LungFunctionStatus)
+summary(asthmaLungFunctionData$LungFunctionStatus)
+
+by(asthmaLungFunctionData$LungFunctionStatus, asthmaLungFunctionData$Group, summary)
+
+by(asthmaLungFunctionData$LungFunctionStatus, asthmaLungFunctionData$Group, freq)
+
+xx <- table(asthmaLungFunctionData$LungFunctionStatus, asthmaLungFunctionData$Group)
+
+xx
+
+chiTreatmentGroup <- chisq.test(xx)
+chiTreatmentGroup
+
+
+phi(chiTreatmentGroup)
+
+cramersV(chiTreatmentGroup)
+
+test <- fisher.test(chiTreatmentGroup)
+test
+
 
 
 ################# WEEK ZERO #################
