@@ -48,7 +48,7 @@ base::summary(asthmaLungFunctionData$Age)
 getmode(asthmaLungFunctionData$Age)
 e1071::skewness(asthmaLungFunctionData$Age)
 histo <- graphics::hist(asthmaLungFunctionData$Age)
-table(cut(asthmaLungFunctionData$Age, breaks=seq(0, 100, 10)))
+table(cut(asthmaLungFunctionData$Age, breaks=seq(0, 25, 1)))
 histo$density = histo$counts/sum(histo$counts)*100
 
 
@@ -72,6 +72,12 @@ asthmaLungFunctionData %>% group_by(Group) %>%
                 n = n())
 
 outlierAges <- boxplot(asthmaLungFunctionData$Age, plot=FALSE)$out
+outlierAges
+
+shapiro.test(asthmaLungFunctionData$Age)
+qqnorm(asthmaLungFunctionData$Age)
+qqline(asthmaLungFunctionData$Age, col = "red")
+outlierAges <- boxplot(asthmaLungFunctionData$Age, plot=TRUE)
 
 ##################### t-test for AGE BY TREATMENT GROUP ###################
 ##################### t-test for AGE BY TREATMENT GROUP ###################
@@ -97,10 +103,7 @@ asthmaLungFunctionData %>% group_by(Group) %>% summarise(mean = mean(Age, na.rm=
                                                  median = median(Age, na.rm=TRUE) , min=min(Age, na.rm=TRUE),
                                                  max=max(Age, na.rm=TRUE),n = n(), non_na_count = sum(!is.na(Age)))
 
-shapiro.test(asthmaLungFunctionData$Age)
-qqnorm(asthmaLungFunctionData$Age)
-qqline(asthmaLungFunctionData$Age, col = "red")
-outlierAges <- boxplot(asthmaLungFunctionData$Age, plot=FALSE)
+
 
 
 ######## TREATMENT GROUP BREAKDOWN/COUNT #########
@@ -212,7 +215,14 @@ asthmaLungFunctionData %>% group_by(Group) %>%
             median=median(Week.0),
             n = n())
 
-outlierAges <- boxplot(asthmaLungFunctionData$Week.0, plot=FALSE)$out
+outlierz <- boxplot(asthmaLungFunctionData$Week.0, plot=FALSE)$out
+
+outlierz
+
+shapiro.test(asthmaLungFunctionData$Week.0)
+qqnorm(asthmaLungFunctionData$Week.0)
+qqline(asthmaLungFunctionData$Week.0, col = "red")
+outlierz <- boxplot(asthmaLungFunctionData$Week.0, plot=TRUE)
 
 ##################### t-test for WEEK ZERO BY TREATMENT GROUP ###################
 ##################### t-test for WEEK ZERO BY TREATMENT GROUP ###################
@@ -365,7 +375,7 @@ asthmaLungFunctionData %>% group_by(Group) %>% summarise(mean = mean(Week.60, na
 shapiro.test(asthmaLungFunctionData$Week.60)
 qqnorm(asthmaLungFunctionData$Week.60)
 qqline(asthmaLungFunctionData$Week.60, col = "red")
-outlierAges <- boxplot(asthmaLungFunctionData$Week.60, plot=FALSE)
+outlierAges <- boxplot(asthmaLungFunctionData$Week.60, plot=TRUE)
 
 
 
