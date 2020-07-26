@@ -9,8 +9,8 @@ library(tidyverse)
 # Create the function to get MODE value.
 # Source: https://www.tutorialspoint.com/r/r_mean_median_mode.htm
 getmode <- function(v) {
-  uniqv <- unique(v)
-  uniqv[which.max(tabulate(match(v, uniqv)))]
+  uniqv <- unique(na.omit(v))
+  uniqv[which.max(tabulate(match(na.omit(v), uniqv)))]
 }
 
 
@@ -190,6 +190,140 @@ shapiro.test(asthmaLungFunctionData$Week.0)
 qqnorm(asthmaLungFunctionData$Week.0)
 qqline(asthmaLungFunctionData$Week.0, col = "red")
 outlierAges <- boxplot(asthmaLungFunctionData$Week.0, plot=FALSE)
+
+
+
+
+
+
+
+################# WEEK TWELVE #################
+################# WEEK TWELVE #################
+################# WEEK TWELVE #################
+################# WEEK TWELVE #################
+################# WEEK TWELVE #################
+
+
+
+#summarytools::freq(asthmaLungFunctionData$Week.12)
+base::summary(asthmaLungFunctionData$Week.12)
+getmode(asthmaLungFunctionData$Week.12)
+e1071::skewness(asthmaLungFunctionData$Week.12, na.rm = TRUE)
+histo <- graphics::hist(asthmaLungFunctionData$Week.12)
+table(cut(asthmaLungFunctionData$Week.12, breaks=seq(0, 100, 10)))
+
+histo$density = histo$counts/sum(histo$counts)*100
+
+
+min(asthmaLungFunctionData$Week.12, na.rm = TRUE)
+max(asthmaLungFunctionData$Week.12, na.rm = TRUE)
+range(asthmaLungFunctionData$Week.12, na.rm = TRUE)
+mean(asthmaLungFunctionData$Week.12, na.rm = TRUE)
+getmode(asthmaLungFunctionData$Week.12)
+median(asthmaLungFunctionData$Week.12, na.rm = TRUE)
+sd(asthmaLungFunctionData$Week.12, na.rm = TRUE)
+
+####### WEEK TWELVE BY TREATMENT GROUP #######
+
+asthmaLungFunctionData %>% group_by(Group) %>% 
+  summarise(mean = mean(Week.12, na.rm = TRUE), 
+            sd = sd(Week.12, na.rm = TRUE), 
+            mode=getmode(Week.12), 
+            min=min(Week.12, na.rm = TRUE), 
+            max=max(Week.12, na.rm = TRUE), 
+            median=median(Week.12, na.rm = TRUE),
+            n = n())
+
+outlierAges <- boxplot(asthmaLungFunctionData$Week.12, plot=FALSE)$out
+
+##################### t-test for WEEK TWELVE BY TREATMENT GROUP ###################
+##################### t-test for WEEK TWELVE BY TREATMENT GROUP ###################
+##################### t-test for WEEK TWELVE BY TREATMENT GROUP ###################
+
+res.ftest <- var.test(Week.12 ~ Group, data = asthmaLungFunctionData)
+res.ftest$p.value
+
+bartlett.test(Week.12 ~ Group, data=asthmaLungFunctionData)
+lvtest <- leveneTest(Week.12 ~ Group, data=asthmaLungFunctionData)
+fligner.test(Week.12 ~ Group, data = asthmaLungFunctionData)
+plot(Week.12 ~ Group, data = asthmaLungFunctionData)
+t.test (Week.12 ~ Group , var.equal=FALSE, data = asthmaLungFunctionData)
+asthmaLungFunctionData %>% group_by(Group) %>% summarise(mean = mean(Week.12, na.rm=TRUE), sd = sd(Week.12, na.rm=TRUE), 
+                                                         median = median(Week.12, na.rm=TRUE) , min=min(Week.12, na.rm=TRUE),
+                                                         max=max(Week.12, na.rm=TRUE),n = n(), non_na_count = sum(!is.na(Week.12)))
+
+shapiro.test(asthmaLungFunctionData$Week.12)
+qqnorm(asthmaLungFunctionData$Week.12)
+qqline(asthmaLungFunctionData$Week.12, col = "red")
+outlierAges <- boxplot(asthmaLungFunctionData$Week.12, plot=FALSE)
+
+
+
+
+
+
+
+################# WEEK SIXTY #################
+################# WEEK SIXTY #################
+################# WEEK SIXTY #################
+################# WEEK SIXTY #################
+################# WEEK SIXTY #################
+
+
+
+#summarytools::freq(asthmaLungFunctionData$Week.60)
+base::summary(asthmaLungFunctionData$Week.60)
+getmode(asthmaLungFunctionData$Week.60)
+e1071::skewness(asthmaLungFunctionData$Week.60, na.rm = TRUE)
+histo <- graphics::hist(asthmaLungFunctionData$Week.60)
+table(cut(asthmaLungFunctionData$Week.60, breaks=seq(0, 100, 10)))
+
+histo$density = histo$counts/sum(histo$counts)*100
+
+
+min(asthmaLungFunctionData$Week.60, na.rm = TRUE)
+max(asthmaLungFunctionData$Week.60, na.rm = TRUE)
+range(asthmaLungFunctionData$Week.60, na.rm = TRUE)
+mean(asthmaLungFunctionData$Week.60, na.rm = TRUE)
+getmode(asthmaLungFunctionData$Week.60)
+median(asthmaLungFunctionData$Week.60, na.rm = TRUE)
+sd(asthmaLungFunctionData$Week.60, na.rm = TRUE)
+
+####### WEEK SIXTY BY TREATMENT GROUP #######
+
+asthmaLungFunctionData %>% group_by(Group) %>% 
+  summarise(mean = mean(Week.60, na.rm = TRUE), 
+            sd = sd(Week.60, na.rm = TRUE), 
+            mode=getmode(Week.60), 
+            min=min(Week.60, na.rm = TRUE), 
+            max=max(Week.60, na.rm = TRUE), 
+            median=median(Week.60, na.rm = TRUE),
+            n = n())
+
+outlierAges <- boxplot(asthmaLungFunctionData$Week.60, plot=FALSE)$out
+
+##################### t-test for WEEK SIXTY BY TREATMENT GROUP ###################
+##################### t-test for WEEK SIXTY BY TREATMENT GROUP ###################
+##################### t-test for WEEK SIXTY BY TREATMENT GROUP ###################
+
+res.ftest <- var.test(Week.60 ~ Group, data = asthmaLungFunctionData)
+res.ftest$p.value
+
+bartlett.test(Week.60 ~ Group, data=asthmaLungFunctionData)
+lvtest <- leveneTest(Week.60 ~ Group, data=asthmaLungFunctionData)
+fligner.test(Week.60 ~ Group, data = asthmaLungFunctionData)
+plot(Week.60 ~ Group, data = asthmaLungFunctionData)
+t.test (Week.60 ~ Group , var.equal=FALSE, data = asthmaLungFunctionData)
+asthmaLungFunctionData %>% group_by(Group) %>% summarise(mean = mean(Week.60, na.rm=TRUE), sd = sd(Week.60, na.rm=TRUE), 
+                                                         median = median(Week.60, na.rm=TRUE) , min=min(Week.60, na.rm=TRUE),
+                                                         max=max(Week.60, na.rm=TRUE),n = n(), non_na_count = sum(!is.na(Week.60)))
+
+shapiro.test(asthmaLungFunctionData$Week.60)
+qqnorm(asthmaLungFunctionData$Week.60)
+qqline(asthmaLungFunctionData$Week.60, col = "red")
+outlierAges <- boxplot(asthmaLungFunctionData$Week.60, plot=FALSE)
+
+
 
 
 
