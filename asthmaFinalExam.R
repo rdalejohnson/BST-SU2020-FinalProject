@@ -24,15 +24,26 @@ str(asthmaLungFunctionData)
 
 
 #### Adding columns to the dataset for later analysis #####
+#### Adding columns to the dataset for later analysis #####
+#### Adding columns to the dataset for later analysis #####
+#### Adding columns to the dataset for later analysis #####
+#### Adding columns to the dataset for later analysis #####
+
+
 asthmaLungFunctionData$GenderMaleFemale <- 
     with(asthmaLungFunctionData, ifelse(is.na(Sex), NA,  ifelse(Sex==0, "Female", "Male")))
-
 
 asthmaLungFunctionData$LungFunctionStatus <- 
   with(asthmaLungFunctionData, ifelse(is.na(Status), NA,  ifelse(Status==0, "Active", "Remission")))
 
 asthmaLungFunctionData$TreatmentGroupDrugName <- 
   with(asthmaLungFunctionData, ifelse(is.na(Group), NA,  ifelse(Group==0, "Drug A/0", "Drug B/1")))
+
+asthmaLungFunctionData$Week.0.to.12.difference <- 
+  with(asthmaLungFunctionData, Week.12 - Week.0)
+
+asthmaLungFunctionData$Week.0.to.60.difference <- 
+  with(asthmaLungFunctionData, Week.60 - Week.0)
 
 
 
@@ -380,32 +391,80 @@ outlierAges <- boxplot(asthmaLungFunctionData$Week.60, plot=TRUE)
 
 
 
+######################   ##### ## MULIPLE LINEAR REGRESSION  ####################  #############
+######################   ##### ## MULIPLE LINEAR REGRESSION  ####################  #############
+######################   ##### ## MULIPLE LINEAR REGRESSION  ####################  #############
+######################   ##### ## MULIPLE LINEAR REGRESSION  ####################  #############
+######################   ##### ## MULIPLE LINEAR REGRESSION  ####################  #############
 
 
 
+library(rms)
+library(car)
+library(ggplot2)
+library(ggpubr)
 
-# trash and examples below this line
+
+################ #AGE AND GENDER
+#Levene's test for equality of variance
+var.test(asthmaLungFunctionData$Age ~ asthmaLungFunctionData$Sex)
+
+#unequal variances t-test
+t.test(asthmaLungFunctionData$Age ~ asthmaLungFunctionData$Sex, var.equal=F)
+
+#equal variances t-test
+t.test(asthmaLungFunctionData$Age ~ asthmaLungFunctionData$Sex, var.equal=T)
+
+################ #AGE AND GROUP
+#Levene's test for equality of variance
+var.test(asthmaLungFunctionData$Age ~ asthmaLungFunctionData$Group)
+
+#unequal variances t-test
+t.test(asthmaLungFunctionData$Age ~ asthmaLungFunctionData$Group, var.equal=F)
+
+#equal variances t-test
+t.test(asthmaLungFunctionData$Age ~ asthmaLungFunctionData$Group, var.equal=T)
 
 
-#age outliers
-#https://www.r-bloggers.com/how-to-remove-outliers-in-r/
-outlierAges <- boxplot(lungCancer$Age, plot=FALSE)
-x<-lungCancer
-x<- x[-which(lungCancer$Age %in% outlierAges),]
-min(x$Age)
-max(x$Age)
-range(x$Age)
-mean(x$Age)
-mean(x$Age, na.rm = TRUE)
-median(x$Age)
-sd(x$Age)
+###### AGE AND WEEK.0.to.12.difference
 
-getmode(lungCancer$Age)
-skewness(lungCancer$Age, na.rm = FALSE)
-histo <- hist(lungCancer$Age)
+scatterplot(Week.0.to.12.difference ~ Age, data = asthmaLungFunctionData)
+plot(x=asthmaLungFunctionData$Age,y=asthmaLungFunctionData$Week.0.to.12.difference)
+Hmisc::rcorr(x=asthmaLungFunctionData$Age,y=asthmaLungFunctionData$Week.0.to.12.difference, type=c("spearman"))
+Hmisc::rcorr(x=asthmaLungFunctionData$Week.0.to.12.difference,y=asthmaLungFunctionData$Age, type=c("spearman"))
 
-table(cut(lungCancer$Age, breaks=seq(0, 100, 10)))
+Hmisc::rcorr(x=asthmaLungFunctionData$Age,y=asthmaLungFunctionData$Week.0.to.12.difference, type=c("pearson"))
 
-h = hist(lungCancer$Age) # or hist(x,plot=FALSE) to avoid the plot of the histogram
-h$density = h$counts/sum(h$counts)*100
-plot(h,freq=FALSE)
+#complete.obs means only complete rows, ignore NA values
+cor(asthmaLungFunctionData$Age, asthmaLungFunctionData$Week.0.to.12.difference, use = "complete.obs", method = "pearson")
+
+cor.test(asthmaLungFunctionData$Age, asthmaLungFunctionData$Week.0.to.12.difference)
+
+ggs = ggscatter(asthmaLungFunctionData, x = "Age", y = "Week.0.to.12.difference", 
+                add = "reg.line", conf.int = TRUE, 
+                cor.coef = TRUE, cor.method = "pearson",
+                xlab = "Age", ylab = "Week.0.to.12.difference") 
+ggs
+
+
+
+###### AGE AND WEEK.0.to.60.difference
+
+scatterplot(Week.0.to.60.difference ~ Age, data = asthmaLungFunctionData)
+plot(x=asthmaLungFunctionData$Age,y=asthmaLungFunctionData$Week.0.to.60.difference)
+Hmisc::rcorr(x=asthmaLungFunctionData$Age,y=asthmaLungFunctionData$Week.0.to.60.difference, type=c("spearman"))
+Hmisc::rcorr(x=asthmaLungFunctionData$Week.0.to.60.difference,y=asthmaLungFunctionData$Age, type=c("spearman"))
+
+Hmisc::rcorr(x=asthmaLungFunctionData$Age,y=asthmaLungFunctionData$Week.0.to.60.difference, type=c("pearson"))
+
+#complete.obs means only complete rows, ignore NA values
+cor(asthmaLungFunctionData$Age, asthmaLungFunctionData$Week.0.to.60.difference, use = "complete.obs", method = "pearson")
+
+cor.test(asthmaLungFunctionData$Age, asthmaLungFunctionData$Week.0.to.12.difference)
+
+ggs = ggscatter(asthmaLungFunctionData, x = "Age", y = "Week.0.to.60.difference", 
+                add = "reg.line", conf.int = TRUE, 
+                cor.coef = TRUE, cor.method = "pearson",
+                xlab = "Age", ylab = "Week.0.to.60.difference") 
+ggs
+
