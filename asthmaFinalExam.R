@@ -468,3 +468,64 @@ ggs = ggscatter(asthmaLungFunctionData, x = "Age", y = "Week.0.to.60.difference"
                 xlab = "Age", ylab = "Week.0.to.60.difference") 
 ggs
 
+
+
+######### GENDER AND TREATMENT GROUP Group
+
+gender.drug.group.table = table(asthmaLungFunctionData$GenderMaleFemale, asthmaLungFunctionData$TreatmentGroupDrugName)
+Xsq <- chisq.test(gender.drug.group.table)
+library(vcd)
+assocstats(gender.drug.group.table)
+Xsq$expected
+
+
+################ #treatment drug group  AND week0-to-12 scores
+#Levene's test for equality of variance
+var.test(asthmaLungFunctionData$Week.0.to.12.difference ~ asthmaLungFunctionData$TreatmentGroupDrugName)
+
+#unequal variances t-test
+t.test(asthmaLungFunctionData$Week.0.to.12.difference ~ asthmaLungFunctionData$TreatmentGroupDrugName, var.equal=F)
+
+#equal variances t-test
+t.test(asthmaLungFunctionData$Week.0.to.12.difference ~ asthmaLungFunctionData$TreatmentGroupDrugName, var.equal=T)
+
+
+################ #treatment drug group  AND week0-to-60 scores
+#Levene's test for equality of variance
+var.test(asthmaLungFunctionData$Week.0.to.60.difference ~ asthmaLungFunctionData$TreatmentGroupDrugName)
+
+#unequal variances t-test
+t.test(asthmaLungFunctionData$Week.0.to.60.difference ~ asthmaLungFunctionData$TreatmentGroupDrugName, var.equal=F)
+
+#equal variances t-test
+t.test(asthmaLungFunctionData$Week.0.to.60.difference ~ asthmaLungFunctionData$TreatmentGroupDrugName, var.equal=T)
+
+
+################# MULTIPLE LINEAR REGRESSION EQUATION AND MODEL #############
+
+
+mod12=ols   (Week.0.to.12.difference~TreatmentGroupDrugName+Age+Sex,data=asthmaLungFunctionData)
+
+mod12.lms=lm(Week.0.to.12.difference~TreatmentGroupDrugName+Age+Sex,data=asthmaLungFunctionData)
+
+
+mod12
+mod12.lms
+summary(mod12.lms)
+
+confint(mod12)
+
+
+
+mod60=ols   (Week.0.to.60.difference~TreatmentGroupDrugName+Age+Sex,data=asthmaLungFunctionData)
+
+mod60.lms=lm(Week.0.to.60.difference~TreatmentGroupDrugName+Age+Sex,data=asthmaLungFunctionData)
+
+
+mod60
+mod60.lms
+summary(mod60.lms)
+
+confint(mod60)
+
+
