@@ -391,11 +391,11 @@ outlierAges <- boxplot(asthmaLungFunctionData$Week.60, plot=TRUE)
 
 
 
-######################   ##### ## MULIPLE LINEAR REGRESSION  ####################  #############
-######################   ##### ## MULIPLE LINEAR REGRESSION  ####################  #############
-######################   ##### ## MULIPLE LINEAR REGRESSION  ####################  #############
-######################   ##### ## MULIPLE LINEAR REGRESSION  ####################  #############
-######################   ##### ## MULIPLE LINEAR REGRESSION  ####################  #############
+######################   ##### ## MULIPLE LINEAR STARTS HERE REGRESSION  ####################  #############
+######################   ##### ## MULIPLE LINEAR STARTS HERE REGRESSION  ####################  #############
+######################   ##### ## MULIPLE LINEAR STARTS HERE REGRESSION  ####################  #############
+######################   ##### ## MULIPLE LINEAR STARTS HERE REGRESSION  ####################  #############
+######################   ##### ## MULIPLE LINEAR STARTS HERE REGRESSION  ####################  #############
 
 
 
@@ -403,6 +403,8 @@ library(rms)
 library(car)
 library(ggplot2)
 library(ggpubr)
+
+########################EVALUATE ALL PAIRS OF VARIABLE INTERACTIONS ##########
 
 
 ################ #AGE AND GENDER
@@ -479,6 +481,29 @@ assocstats(gender.drug.group.table)
 Xsq$expected
 
 
+################ #gender  AND week0-to-12 scores
+#Levene's test for equality of variance
+var.test(asthmaLungFunctionData$Week.0.to.12.difference ~ asthmaLungFunctionData$GenderMaleFemale)
+
+#unequal variances t-test
+t.test(asthmaLungFunctionData$Week.0.to.12.difference ~ asthmaLungFunctionData$GenderMaleFemale, var.equal=F)
+
+#equal variances t-test
+t.test(asthmaLungFunctionData$Week.0.to.12.difference ~ asthmaLungFunctionData$GenderMaleFemale, var.equal=T)
+
+
+################ #gender  AND week0-to-60 scores
+#Levene's test for equality of variance
+var.test(asthmaLungFunctionData$Week.0.to.60.difference ~ asthmaLungFunctionData$GenderMaleFemale)
+
+#unequal variances t-test
+t.test(asthmaLungFunctionData$Week.0.to.60.difference ~ asthmaLungFunctionData$GenderMaleFemale, var.equal=F)
+
+#equal variances t-test
+t.test(asthmaLungFunctionData$Week.0.to.60.difference ~ asthmaLungFunctionData$GenderMaleFemale, var.equal=T)
+
+
+
 ################ #treatment drug group  AND week0-to-12 scores
 #Levene's test for equality of variance
 var.test(asthmaLungFunctionData$Week.0.to.12.difference ~ asthmaLungFunctionData$TreatmentGroupDrugName)
@@ -501,7 +526,36 @@ t.test(asthmaLungFunctionData$Week.0.to.60.difference ~ asthmaLungFunctionData$T
 t.test(asthmaLungFunctionData$Week.0.to.60.difference ~ asthmaLungFunctionData$TreatmentGroupDrugName, var.equal=T)
 
 
+#################### WEEK 12 and WEEK 60  ####################################
+
+scatterplot(Week.0.to.60.difference ~ Week.0.to.12.difference, data = asthmaLungFunctionData)
+plot(x=asthmaLungFunctionData$Week.0.to.12.difference,y=asthmaLungFunctionData$Week.0.to.60.difference)
+Hmisc::rcorr(x=asthmaLungFunctionData$Week.0.to.12.difference,y=asthmaLungFunctionData$Week.0.to.60.difference, type=c("spearman"))
+Hmisc::rcorr(x=asthmaLungFunctionData$Week.0.to.60.difference,y=asthmaLungFunctionData$Week.0.to.12.difference, type=c("spearman"))
+
+Hmisc::rcorr(x=asthmaLungFunctionData$Week.0.to.12.difference,y=asthmaLungFunctionData$Week.0.to.60.difference, type=c("pearson"))
+
+#complete.obs means only complete rows, ignore NA values
+cor(asthmaLungFunctionData$Week.0.to.12.difference, asthmaLungFunctionData$Week.0.to.60.difference, use = "complete.obs", method = "pearson")
+
+cor.test(asthmaLungFunctionData$Week.0.to.12.difference, asthmaLungFunctionData$Week.0.to.12.difference)
+
+ggs = ggscatter(asthmaLungFunctionData, x = "Week.0.to.12.difference", y = "Week.0.to.60.difference", 
+                add = "reg.line", conf.int = TRUE, 
+                cor.coef = TRUE, cor.method = "pearson",
+                xlab = "Week.0.to.12.difference", ylab = "Week.0.to.60.difference") 
+ggs
+
+
 ################# MULTIPLE LINEAR REGRESSION EQUATION AND MODEL #############
+
+#http://www.cookbook-r.com/Manipulating_data/Changing_the_order_of_levels_of_a_factor/
+#RELEVEL: If the factor is unordered, then the levels will still appear in some order, 
+#but the specific order of the levels matters 
+#only for convenience (pen, pencil, brush) – it will determine, 
+#for example, how output will be printed, or the arrangement of items on a graph.
+
+
 
 
 mod12=ols   (Week.0.to.12.difference~TreatmentGroupDrugName+Age+Sex,data=asthmaLungFunctionData)
@@ -527,5 +581,21 @@ mod60.lms
 summary(mod60.lms)
 
 confint(mod60)
+
+
+
+
+
+mod60AgeGenderOnly = ols   (Week.0.to.60.difference~Age+Sex,data=asthmaLungFunctionData)
+
+mod60AgeGenderOnly.lms = lm(Week.0.to.60.difference~Age+Sex,data=asthmaLungFunctionData)
+
+
+mod60AgeGenderOnly
+mod60AgeGenderOnly.lms
+summary(mod60AgeGenderOnly.lms)
+
+confint(mod60AgeGenderOnly)
+
 
 
