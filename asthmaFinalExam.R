@@ -599,3 +599,161 @@ confint(mod60AgeGenderOnly)
 
 
 
+
+Anova.mod12 <- anova(mod12)
+
+Anova.mod12
+
+Anova.mod12lms <- anova(mod12.lms)
+
+Anova.mod12lms
+
+Corrected_Total=Anova.mod12[4,"d.f."] + Anova.mod12[5,"d.f."]
+
+Corrected_Total
+
+library(broom)
+glance(mod12) %>%
+  dplyr::select(adj.r.squared, sigma, AIC, BIC, p.value)
+
+
+
+summary(mod12)
+summary(mod12.lms)
+
+plot(mod12.lms, pch=23 ,bg='orange',cex=2)
+
+plot(resid(mod12.lms), rstudent(mod12.lms), pch=23, bg='blue', cex=3)
+plot(rstandard(mod12.lms), rstudent(mod12.lms), pch=23, bg='purple', cex=3)
+qqnorm(rstandard(mod12.lms), pch=23, bg='red', cex=2)
+
+plot(dffits(mod12.lms), pch=23, bg='orange', cex=2, ylab="DFFITS")
+
+asthmaLungFunctionData[which(dffits(mod12.lms) > 1),]
+
+plot(cooks.distance(mod12.lms), pch=23, bg='orange', cex=2, ylab="Cook's distance")
+plot(hatvalues(mod12.lms), pch=23, bg='orange', cex=1, ylab='Hat values')
+asthmaLungFunctionData[which(hatvalues(mod12.lms) > 0.3),]
+
+plot(hatvalues(mod12.lms), rstandard(mod12.lms), pch=23, bg='red', cex=2)
+
+plot(dfbetas(mod12.lms)[,'Sex'], pch=23, bg='orange', cex=2, ylab="DFBETA (Sex)")
+dfbetas.sex <- asthmaLungFunctionData[which(abs(dfbetas(mod12.lms)[,'Sex']) > 1),]
+dfbetas.sex 
+
+plot(dfbetas(mod12.lms)[,'Age'], pch=23, bg='orange', cex=2, ylab="DFBETA (Age)")
+dfbetas.age <- asthmaLungFunctionData[which(abs(dfbetas(mod12.lms)[,'Age']) > 1),]
+dfbetas.age
+
+
+
+
+
+#plot(trunc(lab1$bmi))
+plot(mod12)
+
+mod12.predicted <- predict(mod12)   # Save the predicted values
+mod12.residuals <- residuals(mod12) # Save the residual values
+
+
+
+######################################
+# How do I get standardized betas's ##
+######################################
+
+#install.packages("lm.beta")
+library(stats)
+library(lm.beta)
+lm.beta(mod12)
+lm.beta(mod12.lms)
+
+AIC(mod12)
+BIC(mod12)
+vif(mod12)
+Tolerance=1/vif(mod12)
+Tolerance
+
+library(stats)
+CooksD=cooks.distance(mod12.lms)
+#CooksD[CooksD> 0.0031]
+#Count number > 0.0031
+# 61 were identified
+sum(CooksD>0.0031)
+
+#Hat values
+hatvalues(mod12.lms)
+
+plot(hatvalues(mod12.lms),type="h")
+plot(rstudent(mod12.lms),type="h")
+#Influence plot
+influencePlot(mod12.lms,main="Influence Plot",sub="Circle size is proportional to Cook's distance")
+plot(mod12.lms,which=1)
+plot(mod12.lms,which=2)
+plot(mod12.lms, which=3)
+plot(mod12.lms,which=4)
+plot(mod12.lms,which=5)
+plot(mod12.lms,which=6)
+
+
+library(MASS)
+
+#leverages(mod) # will not run
+plot(resid(mod12))
+#mod1
+confint(mod12)
+sum( rstudent(mod12.lms) <= (-2) | rstudent(mod12.lms) >= 2 )
+
+ll=rstudent(mod12.lms) <= -2
+RR=rstudent(mod12.lms) >= 2  
+sum(ll | RR)
+#How do you get PRESS
+#install.packages("qpcR")
+library(qpcR)
+
+#res0 <- PRESS(mod)
+res1 <- PRESS(mod12)
+barplot(res1$residuals)
+
+plot(mod12.lms)
+h=hatvalues(mod12.lms)
+Leverage=h/(1-h)
+
+sum(Leverage> 0.0092)
+
+
+residuals(mod12.lms)
+
+
+
+
+# Fit the model
+
+lab3 <- asthmaLungFunctionData[-which(is.na(asthmaLungFunctionData$TreatmentGroupDrugName) | is.na(asthmaLungFunctionData$Age) |  is.na(asthmaLungFunctionData$Sex) ), ]
+#lab3 <- asthmaLungFunctionData[-which(! complete.cases(asthmaLungFunctionData))]
+
+fit <- lm(Week.0.to.12.difference~TreatmentGroupDrugName+Age+Sex,data=lab3)
+
+fit
+
+# Obtain predicted and residual values
+lab3$predicted = predict(fit)
+lab3$residuals <- residuals(fit)
+
+library(tidyr)
+
+# Create plot
+lab3 %>% 
+  gather(key = "iv", value = "x", -bmi, -predicted, -residuals) %>%
+  ggplot(aes(x = x, y = bmi)) +
+  geom_segment(aes(xend = x, yend = predicted), alpha = .2) +
+  geom_point(aes(color = residuals)) +
+  scale_color_gradient2(low = "blue", mid = "white", high = "red") +
+  guides(color = FALSE) +
+  geom_point(aes(y = predicted), shape = 1) +
+  facet_grid(~ iv, scales = "free") +
+  theme_bw()
+
+
+ggqqplot(lab3$residuals, ylab = "Residuals")
+
+
