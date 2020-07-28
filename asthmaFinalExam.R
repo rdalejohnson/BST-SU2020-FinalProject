@@ -669,6 +669,10 @@ lm.beta(mod12.lms)
 
 AIC(mod12)
 BIC(mod12)
+
+#VIF = 1 (Not correlated)
+#1 < VIF < 5 (Moderately correlated)
+#VIF >=5 (Highly correlated)
 vif(mod12)
 Tolerance=1/vif(mod12)
 Tolerance
