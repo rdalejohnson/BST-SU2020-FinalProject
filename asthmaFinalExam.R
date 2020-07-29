@@ -569,6 +569,21 @@ summary(mod12.lms)
 
 confint(mod12.lms)
 
+#################### REMOVING AGE FROM THE MODEL JUST FOR FUN #############
+
+# mod12.noage=ols   (Week.0.to.12.difference~TreatmentGroupDrugName+Sex,data=asthmaLungFunctionData)
+# 
+# mod12.noage.lms=lm(Week.0.to.12.difference~TreatmentGroupDrugName+Sex,data=asthmaLungFunctionData)
+# 
+# #summary(mod12)
+# mod12.noage
+# mod12.noage.lms
+# summary(mod12.noage)
+# 
+# summary(mod12.noage.lms)
+# 
+# confint(mod12.noage)
+
 
 ######################################
 # How do I get standardized betas's ##
