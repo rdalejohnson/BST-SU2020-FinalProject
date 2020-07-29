@@ -462,7 +462,7 @@ Hmisc::rcorr(x=asthmaLungFunctionData$Age,y=asthmaLungFunctionData$Week.0.to.60.
 #complete.obs means only complete rows, ignore NA values
 cor(asthmaLungFunctionData$Age, asthmaLungFunctionData$Week.0.to.60.difference, use = "complete.obs", method = "pearson")
 
-cor.test(asthmaLungFunctionData$Age, asthmaLungFunctionData$Week.0.to.12.difference)
+cor.test(asthmaLungFunctionData$Age, asthmaLungFunctionData$Week.0.to.60.difference)
 
 ggs = ggscatter(asthmaLungFunctionData, x = "Age", y = "Week.0.to.60.difference", 
                 add = "reg.line", conf.int = TRUE, 
@@ -562,14 +562,140 @@ mod12=ols   (Week.0.to.12.difference~TreatmentGroupDrugName+Age+Sex,data=asthmaL
 
 mod12.lms=lm(Week.0.to.12.difference~TreatmentGroupDrugName+Age+Sex,data=asthmaLungFunctionData)
 
-
+#summary(mod12)
 mod12
 mod12.lms
 summary(mod12.lms)
 
+confint(mod12.lms)
+
+
+######################################
+# How do I get standardized betas's ##
+######################################
+
+library(stats)
+library(lm.beta)
+lm.beta(mod12)
+lm.beta(mod12.lms)
+
+
+##### SCORES, ETC.
+Anova.mod12 <- anova(mod12)
+
+Anova.mod12
+
+Anova.mod12lms <- anova(mod12.lms)
+
+Anova.mod12lms
+
+Corrected_Total=Anova.mod12[4,"d.f."] + Anova.mod12[5,"d.f."]
+
+Corrected_Total
+
+library(broom)
+glance(mod12) %>%
+  dplyr::select(adj.r.squared, sigma, AIC, BIC, p.value)
+
+
+plot(mod12.lms, pch=23 ,bg='orange',cex=2)
+
+plot(resid(mod12.lms), rstudent(mod12.lms), pch=23, bg='blue', cex=3)
+plot(rstandard(mod12.lms), rstudent(mod12.lms), pch=23, bg='purple', cex=3)
+qqnorm(rstandard(mod12.lms), pch=23, bg='red', cex=2)
+
+plot(dffits(mod12.lms), pch=23, bg='orange', cex=2, ylab="DFFITS")
+
+asthmaLungFunctionData[which(dffits(mod12.lms) > 1),]
+
+plot(cooks.distance(mod12.lms), pch=23, bg='orange', cex=2, ylab="Cook's distance")
+plot(hatvalues(mod12.lms), pch=23, bg='orange', cex=1, ylab='Hat values')
+asthmaLungFunctionData[which(hatvalues(mod12.lms) > 0.3),]
+
+plot(hatvalues(mod12.lms), rstandard(mod12.lms), pch=23, bg='red', cex=2)
+
+plot(dfbetas(mod12.lms)[,'Sex'], pch=23, bg='orange', cex=2, ylab="DFBETA (Sex)")
+dfbetas.sex <- asthmaLungFunctionData[which(abs(dfbetas(mod12.lms)[,'Sex']) > 1),]
+dfbetas.sex 
+
+plot(dfbetas(mod12.lms)[,'Age'], pch=23, bg='orange', cex=2, ylab="DFBETA (Age)")
+dfbetas.age <- asthmaLungFunctionData[which(abs(dfbetas(mod12.lms)[,'Age']) > 1),]
+dfbetas.age
+
+
+
+
+AIC(mod12)
+BIC(mod12)
+
+#VIF = 1 (Not correlated)
+#1 < VIF < 5 (Moderately correlated)
+#VIF >=5 (Highly correlated)
+vif(mod12)
+Tolerance=1/vif(mod12)
+Tolerance
+
+library(stats)
+CooksD=cooks.distance(mod12.lms)
+#CooksD[CooksD> 0.0031]
+#Count number > 0.0031
+# 61 were identified
+sum(CooksD>0.0031)
+
+#Hat values
+hatvalues(mod12.lms)
+
+plot(hatvalues(mod12.lms),type="h")
+plot(rstudent(mod12.lms),type="h")
+#Influence plot
+influencePlot(mod12.lms,main="Influence Plot",sub="Circle size is proportional to Cook's distance")
+plot(mod12.lms,which=1)
+plot(mod12.lms,which=2)
+plot(mod12.lms, which=3)
+plot(mod12.lms,which=4)
+plot(mod12.lms,which=5)
+plot(mod12.lms,which=6)
+
+
+library(MASS)
+
+#leverages(mod) # will not run
+plot(resid(mod12))
+#mod1
 confint(mod12)
+sum( rstudent(mod12.lms) <= (-2) | rstudent(mod12.lms) >= 2 )
+
+ll=rstudent(mod12.lms) <= -2
+RR=rstudent(mod12.lms) >= 2  
+sum(ll | RR)
+#How do you get PRESS
+#install.packages("qpcR")
+library(qpcR)
+
+#res0 <- PRESS(mod)
+res1 <- PRESS(mod12)
+barplot(res1$residuals)
+
+plot(mod12.lms)
+h=hatvalues(mod12.lms)
+Leverage=h/(1-h)
+
+sum(Leverage> 0.0092)
 
 
+residuals(mod12.lms)
+
+
+
+
+
+####################################################################################################
+####################################################################################################
+####################################################################################################
+####################################################################################################
+####################################################################################################
+
+###### WEEK 0 to WEEK 60
 
 mod60=ols   (Week.0.to.60.difference~TreatmentGroupDrugName+Age+Sex,data=asthmaLungFunctionData)
 
