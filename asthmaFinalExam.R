@@ -702,7 +702,9 @@ residuals(mod12.lms)
 
 
 
-
+###### WEEK 0 to WEEK 60###### WEEK 0 to WEEK 60###### WEEK 0 to WEEK 60###### WEEK 0 to WEEK 60###### WEEK 0 to WEEK 60
+###### WEEK 0 to WEEK 60###### WEEK 0 to WEEK 60###### WEEK 0 to WEEK 60###### WEEK 0 to WEEK 60###### WEEK 0 to WEEK 60
+###### WEEK 0 to WEEK 60###### WEEK 0 to WEEK 60###### WEEK 0 to WEEK 60###### WEEK 0 to WEEK 60###### WEEK 0 to WEEK 60
 
 ####################################################################################################
 ####################################################################################################
@@ -724,6 +726,91 @@ summary(mod60.lms)
 confint(mod60)
 
 
+vif(mod60)
+Tolerance=1/vif(mod60)
+Tolerance
+
+plot(dffits(mod60.lms), pch=23, bg='orange', cex=2, ylab="DFFITS")
+
+asthmaLungFunctionData[which(dffits(mod60.lms) > 1),]
+
+######################################
+# How do I get standardized betas's ##
+######################################
+
+#install.packages("lm.beta")
+library(stats)
+library(lm.beta)
+lm.beta(mod60)
+lm.beta(mod60.lms)
+
+
+
+AIC(mod60)
+BIC(mod60)
+
+
+
+library(stats)
+CooksD=cooks.distance(mod60.lms)
+#CooksD[CooksD> 0.0031]
+#Count number > 0.0031
+# 61 were identified
+sum(CooksD>0.0031)
+
+#Hat values
+hatvalues(mod60.lms)
+
+plot(hatvalues(mod60.lms),type="h")
+plot(rstudent(mod60.lms),type="h")
+#Influence plot
+influencePlot(mod60.lms,main="Influence Plot",sub="Circle size is proportional to Cook's distance")
+plot(mod60.lms,which=1)
+plot(mod60.lms,which=2)
+plot(mod60.lms, which=3)
+plot(mod60.lms,which=4)
+plot(mod60.lms,which=5)
+plot(mod60.lms,which=6)
+
+
+
+library(MASS)
+
+#leverages(mod) # will not run
+plot(resid(mod60))
+
+
+sum( rstudent(mod60.lms) <= (-2) | rstudent(mod60.lms) >= 2 )
+
+ll=rstudent(mod60.lms) <= -2
+RR=rstudent(mod60.lms) >= 2  
+sum(ll | RR)
+#How do you get PRESS
+#install.packages("qpcR")
+library(qpcR)
+
+#res0 <- PRESS(mod)
+res1 <- PRESS(mod60)
+barplot(res1$residuals)
+
+plot(mod60.lms)
+h=hatvalues(mod60.lms)
+Leverage=h/(1-h)
+
+sum(Leverage> 0.0092)
+
+
+residuals(mod60.lms)
+
+
+
+
+
+
+
+
+############ TRASH AND SCRATCHPAD BELOW THIS LINE
+
 
 
 
@@ -737,9 +824,6 @@ mod60AgeGenderOnly.lms
 summary(mod60AgeGenderOnly.lms)
 
 confint(mod60AgeGenderOnly)
-
-
-
 
 Anova.mod12 <- anova(mod12)
 
