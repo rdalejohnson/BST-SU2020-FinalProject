@@ -855,7 +855,32 @@ t.test(asthmaLungFunctionData$Week.0 ~ asthmaLungFunctionData$Group, var.equal=F
 t.test(asthmaLungFunctionData$Week.0 ~ asthmaLungFunctionData$Group, var.equal=T)
 
 
-############ TRASH AND SCRATCHPAD BELOW THIS LINE
+mylogit = glm(Status ~ Group + Week.0 + Age +  Sex , data = asthmaLungFunctionData, family = "binomial")
+
+
+
+summary(mylogit)
+
+#VIF values for all predictors
+car::vif(mylogit)
+
+
+# Get the AOR and the CI on the AOR with this
+require(MASS)
+exp(cbind(coef(mylogit), confint(mylogit)))  
+
+exp(coefficients(mylogit))
+
+
+############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
+############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
+############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
+############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
+############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
+############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
+############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
+############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
+############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
 
 
 
