@@ -804,9 +804,55 @@ residuals(mod60.lms)
 
 
 
+############################################## LOGISTIC REGRESSION ##############################################
+############################################## LOGISTIC REGRESSION ##############################################
+############################################## LOGISTIC REGRESSION ##############################################
+############################################## LOGISTIC REGRESSION ##############################################
+############################################## LOGISTIC REGRESSION ##############################################
+############################################## LOGISTIC REGRESSION ##############################################
 
 
+###### AGE AND WEEK ZERO/BASELINE
 
+scatterplot(Week.0 ~ Age, data = asthmaLungFunctionData)
+plot(x=asthmaLungFunctionData$Age,y=asthmaLungFunctionData$Week.0)
+Hmisc::rcorr(x=asthmaLungFunctionData$Age,y=asthmaLungFunctionData$Week.0, type=c("spearman"))
+Hmisc::rcorr(x=asthmaLungFunctionData$Week.0,y=asthmaLungFunctionData$Age, type=c("spearman"))
+
+Hmisc::rcorr(x=asthmaLungFunctionData$Age,y=asthmaLungFunctionData$Week.0, type=c("pearson"))
+
+#complete.obs means only complete rows, ignore NA values
+cor(asthmaLungFunctionData$Age, asthmaLungFunctionData$Week.0, use = "complete.obs", method = "pearson")
+
+cor.test(asthmaLungFunctionData$Age, asthmaLungFunctionData$Week.0)
+
+ggs = ggscatter(asthmaLungFunctionData, x = "Age", y = "Week.0", 
+                add = "reg.line", conf.int = TRUE, 
+                cor.coef = TRUE, cor.method = "pearson",
+                xlab = "Age", ylab = "Week.0") 
+ggs
+
+
+################ #WEEK ZERO/BASELINE AND GENDER
+#Levene's test for equality of variance
+var.test(asthmaLungFunctionData$Week.0 ~ asthmaLungFunctionData$Sex)
+
+#unequal variances t-test
+t.test(asthmaLungFunctionData$Week.0 ~ asthmaLungFunctionData$Sex, var.equal=F)
+
+#equal variances t-test
+t.test(asthmaLungFunctionData$Week.0 ~ asthmaLungFunctionData$Sex, var.equal=T)
+
+
+################ #WEEK ZERO/BASELINE AND TREATMENT GROUP
+#Levene's test for equality of variance
+var.test(asthmaLungFunctionData$Week.0 ~ asthmaLungFunctionData$Group)
+
+#unequal variances t-test
+t.test(asthmaLungFunctionData$Week.0 ~ asthmaLungFunctionData$Group, var.equal=F)
+
+#equal variances t-test
+t.test(asthmaLungFunctionData$Week.0 ~ asthmaLungFunctionData$Group, var.equal=T)
 
 
 ############ TRASH AND SCRATCHPAD BELOW THIS LINE
