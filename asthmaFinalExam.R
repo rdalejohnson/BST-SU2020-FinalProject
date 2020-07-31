@@ -811,6 +811,8 @@ residuals(mod60.lms)
 ############################################## LOGISTIC REGRESSION ##############################################
 ############################################## LOGISTIC REGRESSION ##############################################
 
+#sum(complete.cases(asthmaLungFunctionData))
+
 
 ###### AGE AND WEEK ZERO/BASELINE
 
@@ -857,9 +859,57 @@ t.test(asthmaLungFunctionData$Week.0 ~ asthmaLungFunctionData$Group, var.equal=T
 
 mylogit = glm(Status ~ Group + Week.0 + Age +  Sex , data = asthmaLungFunctionData, family = "binomial")
 
-
-
 summary(mylogit)
+
+
+
+library(lmtest)
+
+lrtest(mylogit)
+
+
+with (mylogit, null.deviance - deviance)
+with (mylogit, df.null - df.residual)
+with (mylogit, pchisq(null.deviance - deviance, 
+                      df.null - df.residual,
+                      lower.tail = FALSE))
+
+
+
+library(caret)
+varImp(mylogit)
+
+library(ResourceSelection)
+hoslem.output <- hoslem.test(mylogit$y, fitted(mylogit), g=10)
+
+#library(MKmisc)
+#HLgof.test(fit = fitted(mylogit), obs = obesitySleep$Obese)
+
+#NONsignificant result means model fits well
+
+hoslem.output
+
+cbind(hoslem.output$expected,hoslem.output$observed)
+
+#Cox and Snell, Nagelkerge, McFadden outputs:
+library(rcompanion)
+nagelkerke(mylogit)
+
+####### CONFUSION MATRIX ##########
+
+probabilities <- predict(mylogit, type = "response")
+1 - mean(abs(probabilities - mylogit[["y"]]))
+
+table(probabilities>.5, mylogit[["y"]])
+
+#Jiaying Hao email:
+#This is the Confusion Matrix; 
+#to get percentage correctly classified, use the following formulae: (TRUE POSITIVES + TRUE NEGATIVES) / Total.
+
+percentageCorrectlyClassified <- ((82+70)/(82+70+18+22))*100
+percentageCorrectlyClassified
+
+
 
 #VIF values for all predictors
 car::vif(mylogit)
