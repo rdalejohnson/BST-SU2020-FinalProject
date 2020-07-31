@@ -872,6 +872,21 @@ exp(cbind(coef(mylogit), confint(mylogit)))
 exp(coefficients(mylogit))
 
 
+
+##### predict and specific scenarios
+
+intercept.coeff = 5.22312
+group.coeff = -2.99757
+weekzero.coeff = -0.49418
+age.coeff = -0.05501
+sex.coeff = 0.11284
+ 
+exponentOfe <- intercept.coeff + (group.coeff*0) + (weekzero.coeff*7.58) + (age.coeff*25) + (sex.coeff*0) 
+exponentOfe
+probability.example <- exp(exponentOfe)/(1+exp(exponentOfe))
+probability.example
+
+
 ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
 ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
 ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
