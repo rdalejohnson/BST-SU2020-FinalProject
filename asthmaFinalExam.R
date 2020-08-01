@@ -931,11 +931,16 @@ weekzero.coeff = -0.49418
 age.coeff = -0.05501
 sex.coeff = 0.11284
  
-exponentOfe <- intercept.coeff + (group.coeff*0) + (weekzero.coeff*7.58) + (age.coeff*25) + (sex.coeff*0) 
+exponentOfe <- intercept.coeff + (group.coeff*1) + (weekzero.coeff*6.58) + (age.coeff*25) + (sex.coeff*1) 
 exponentOfe
 probability.example <- exp(exponentOfe)/(1+exp(exponentOfe))
 probability.example
 
+
+exponentOfe <- intercept.coeff + (group.coeff*0) + (weekzero.coeff*6.58) + (age.coeff*25) + (sex.coeff*1) 
+exponentOfe
+probability.example <- exp(exponentOfe)/(1+exp(exponentOfe))
+probability.example
 
 ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
 ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE  ############ TRASH AND SCRATCHPAD BELOW THIS LINE
